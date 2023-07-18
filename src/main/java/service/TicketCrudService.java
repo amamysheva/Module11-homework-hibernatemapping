@@ -7,56 +7,78 @@ import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import service.HibernateUtil;
 
 import java.util.List;
 
 public class TicketCrudService {
     private final SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
-    public void createTicket(Client client, Planet fromPlanet, Planet toPlanet) {
+    public void create(Client client, Planet fromPlanet, Planet toPlanet) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            Ticket ticket = new Ticket();
-            ticket.setClient(client);
-            ticket.setFromPlanet(fromPlanet);
-            ticket.setToPlanet(toPlanet);
-            session.persist(ticket);
-            transaction.commit();
+            try {
+                Ticket ticket = new Ticket();
+                ticket.setClient(client);
+                ticket.setFromPlanet(fromPlanet);
+                ticket.setToPlanet(toPlanet);
+                session.persist(ticket);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (PropertyValueException e) {
             System.out.println("\nArguments of method createTicket() can't be null");
         }
     }
 
-    public Ticket getTicketById(long id) {
+    public Ticket getById(long id) {
         Session session = sessionFactory.openSession();
-        Ticket ticket = session.get(Ticket.class, id);
-        session.close();
-        return ticket;
+        try {
+            return session.get(Ticket.class, id);
+        } finally {
+            session.close();
+        }
     }
 
-    public void updateTicket(Client client, long id) {
+    public void update(Client client, long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Ticket ticket = session.get(Ticket.class, id);
-        ticket.setClient(client);
-        session.persist(ticket);
-        transaction.commit();
-        session.close();
+        try {
+            Ticket ticket = session.get(Ticket.class, id);
+            ticket.setClient(client);
+            session.persist(ticket);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
-    public void deleteTicket(long id) {
+    public void delete(long id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Ticket ticket = session.get(Ticket.class, id);
-        session.remove(ticket);
-        transaction.commit();
-        session.close();
+        try {
+            Ticket ticket = session.get(Ticket.class, id);
+            session.remove(ticket);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
-    public List<Ticket> getAllTickets() {
+    public List<Ticket> getTickets() {
         Session session = sessionFactory.openSession();
-        List<Ticket> ticketList = session.createQuery("from entity.Ticket", Ticket.class).list();
-        session.close();
-        return ticketList;
+        try {
+            return session.createQuery("from Ticket", Ticket.class).list();
+        } finally {
+            session.close();
+        }
     }
 }

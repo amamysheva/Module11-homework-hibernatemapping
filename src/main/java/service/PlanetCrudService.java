@@ -10,47 +10,66 @@ import java.util.List;
 public class PlanetCrudService {
     private final SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
-    public void createPlanet(String id, String name) {
+    public void create(String id, String name) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Planet planet = new Planet();
-        planet.setId(id);
-        planet.setName(name);
-        session.persist(planet);
-        transaction.commit();
-        session.close();
+        try {
+            Planet planet = new Planet();
+            planet.setId(id);
+            planet.setName(name);
+            session.persist(planet);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 
-    public Planet getPlanetById(String id) {
+    public Planet getById(String id) {
         Session session = sessionFactory.openSession();
-        Planet planet = session.get(Planet.class, id);
-        session.close();
-        return planet;
+        try {
+            return session.get(Planet.class, id);
+        } finally {
+            session.close();
+        }
     }
 
-    public void updatePlanet(String id, String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Planet planet = session.get(Planet.class, id);
-        planet.setName(name);
-        session.persist(planet);
-        transaction.commit();
-        session.close();
-    }
-
-    public void deletePlanet(String id) {
+    public void update(String id, String name) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Planet planet = session.get(Planet.class, id);
-        session.remove(planet);
-        transaction.commit();
-        session.close();
+        try {
+            Planet planet = session.get(Planet.class, id);
+            planet.setName(name);
+            session.persist(planet);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 
-    public List<Planet> getAllPlanets() {
+    public void deleteById(String id) {
         Session session = sessionFactory.openSession();
-        List<Planet> planetList = session.createQuery("from entity.Planet", Planet.class).list();
-        session.close();
-        return planetList;
+        Transaction transaction = session.beginTransaction();
+        try {
+            Planet planet = session.get(Planet.class, id);
+            session.remove(planet);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<Planet> getAll() {
+        Session session = sessionFactory.openSession();
+        try {
+            return session.createQuery("from Planet", Planet.class).list();
+        } finally {
+            session.close();
+        }
     }
 }

@@ -9,46 +9,65 @@ import java.util.List;
 
 public class ClientCrudService {
     private final SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
-    public void createClient(String name) {
+    public void create(String name) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Client client = new Client();
-        client.setName(name);
-        session.persist(client);
-        transaction.commit();
-        session.close();
+        try {
+            Client client = new Client();
+            client.setName(name);
+            session.persist(client);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 
-    public Client getClientById(long id) {
+    public Client getById(long id) {
         Session session = sessionFactory.openSession();
-        Client client = session.get(Client.class, id);
-        session.close();
-        return client;
+        try {
+            return session.get(Client.class, id);
+        } finally {
+            session.close();
+        }
     }
 
-    public void updateClient(long id, String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Client client = session.get(Client.class, id);
-        client.setName(name);
-        session.persist(client);
-        transaction.commit();
-        session.close();
-    }
-
-    public void deleteClientById(long id) {
+    public void update(long id, String name) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Client client = session.get(Client.class, id);
-        session.remove(client);
-        transaction.commit();
-        session.close();
+        try {
+            Client client = session.get(Client.class, id);
+            client.setName(name);
+            session.update(client);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void deleteById(long id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Client client = session.get(Client.class, id);
+            session.delete(client);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 
     public List<Client> getAllClients() {
         Session session = sessionFactory.openSession();
-        List<Client> clientList = session.createQuery("from entity.Client", Client.class).list();
-        session.close();
-        return clientList;
+        try {
+            return session.createQuery("from Client", Client.class).list();
+        } finally {
+            session.close();
+        }
     }
 }

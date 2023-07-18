@@ -27,22 +27,22 @@ public class DemoHibernate {
     }
 
     private static void ticketCrudServiceCheck() {
-        ticketCrudService.createTicket(clientCrudService.getClientById(6),
-                planetCrudService.getPlanetById("PL4"),
-                planetCrudService.getPlanetById("PL5"));
-        System.out.println(ticketCrudService.getTicketById(11));
-        ticketCrudService.updateTicket(clientCrudService.getClientById(7), 11);
-        ticketCrudService.deleteTicket(8);
-        System.out.println(ticketCrudService.getAllTickets());
+        ticketCrudService.create(clientCrudService.getById(6),
+                planetCrudService.getById("PL4"),
+                planetCrudService.getById("PL5"));
+        System.out.println(ticketCrudService.getById(11));
+        ticketCrudService.update(clientCrudService.getById(7), 11);
+        ticketCrudService.delete(8);
+        System.out.println(ticketCrudService.getTickets());
     }
 
     private static void ticketCrudServiceNullCheck() {
-        ticketCrudService.createTicket(null,
-                planetCrudService.getPlanetById("PL1"),
-                planetCrudService.getPlanetById("PL2"));
+        ticketCrudService.create(null,
+                planetCrudService.getById("PL1"),
+                planetCrudService.getById("PL2"));
 
-        ticketCrudService.createTicket(clientCrudService.getClientById(3),
+        ticketCrudService.create(clientCrudService.getById(3),
                 null,
-                planetCrudService.getPlanetById("PL2"));
+                planetCrudService.getById("PL2"));
     }
 }
