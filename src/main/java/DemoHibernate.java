@@ -27,9 +27,6 @@ public class DemoHibernate {
     }
 
     private static void ticketCrudServiceCheck() {
-        ticketCrudService.create(clientCrudService.getById(6),
-                planetCrudService.getById("PL4"),
-                planetCrudService.getById("PL5"));
         System.out.println(ticketCrudService.getById(11));
         ticketCrudService.update(clientCrudService.getById(7), 11);
         ticketCrudService.delete(8);
@@ -37,12 +34,8 @@ public class DemoHibernate {
     }
 
     private static void ticketCrudServiceNullCheck() {
-        ticketCrudService.create(null,
-                planetCrudService.getById("PL1"),
-                planetCrudService.getById("PL2"));
+        ticketCrudService.create(null);
 
-        ticketCrudService.create(clientCrudService.getById(3),
-                null,
-                planetCrudService.getById("PL2"));
+        ticketCrudService.create(null);
     }
 }

@@ -14,14 +14,10 @@ import java.util.List;
 public class TicketCrudService {
     private final SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
-    public void create(Client client, Planet fromPlanet, Planet toPlanet) {
+    public void create(Ticket ticket) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Ticket ticket = new Ticket();
-                ticket.setClient(client);
-                ticket.setFromPlanet(fromPlanet);
-                ticket.setToPlanet(toPlanet);
                 session.persist(ticket);
                 transaction.commit();
             } catch (Exception e) {
@@ -42,12 +38,10 @@ public class TicketCrudService {
         }
     }
 
-    public void update(Client client, long id) {
+    public void update(Ticket ticket) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Ticket ticket = session.get(Ticket.class, id);
-            ticket.setClient(client);
             session.persist(ticket);
             transaction.commit();
         } catch (Exception e) {

@@ -10,13 +10,10 @@ import java.util.List;
 public class PlanetCrudService {
     private final SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
-    public void create(String id, String name) {
+    public void create(Planet planet) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Planet planet = new Planet();
-            planet.setId(id);
-            planet.setName(name);
             session.persist(planet);
             transaction.commit();
         } catch (Exception e) {
@@ -35,12 +32,10 @@ public class PlanetCrudService {
         }
     }
 
-    public void update(String id, String name) {
+    public void update(Planet planet) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Planet planet = session.get(Planet.class, id);
-            planet.setName(name);
             session.persist(planet);
             transaction.commit();
         } catch (Exception e) {
