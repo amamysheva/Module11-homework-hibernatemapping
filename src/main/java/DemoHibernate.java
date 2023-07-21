@@ -28,7 +28,7 @@ public class DemoHibernate {
 
     private static void ticketCrudServiceCheck() {
         System.out.println(ticketCrudService.getById(11));
-        ticketCrudService.update(clientCrudService.getById(7), 11);
+        ticketCrudService.update(null);
         ticketCrudService.delete(8);
         System.out.println(ticketCrudService.getTickets());
     }

@@ -1,13 +1,10 @@
 package service;
 
-import entity.Client;
-import entity.Planet;
 import entity.Ticket;
 import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import service.HibernateUtil;
 
 import java.util.List;
 
