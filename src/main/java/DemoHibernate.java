@@ -1,3 +1,4 @@
+import entity.Ticket;
 import org.flywaydb.core.Flyway;
 import service.ClientCrudService;
 import service.HibernateUtil;
@@ -12,6 +13,7 @@ public class DemoHibernate {
     private static final ClientCrudService clientCrudService = new ClientCrudService();
     private static final PlanetCrudService planetCrudService = new PlanetCrudService();
     private static final TicketCrudService ticketCrudService = new TicketCrudService();
+    private static final Ticket ticket = new Ticket();
 
     public static void main(String[] args) {
         Flyway.configure()
@@ -28,14 +30,14 @@ public class DemoHibernate {
 
     private static void ticketCrudServiceCheck() {
         System.out.println(ticketCrudService.getById(11));
-        ticketCrudService.update(null);
+        ticketCrudService.create(ticket);
+        ticketCrudService.update(ticket);
         ticketCrudService.delete(8);
         System.out.println(ticketCrudService.getTickets());
     }
 
     private static void ticketCrudServiceNullCheck() {
-        ticketCrudService.create(null);
-
-        ticketCrudService.create(null);
+        ticketCrudService.create(ticket);
+        ticketCrudService.create(ticket);
     }
 }
