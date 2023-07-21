@@ -39,6 +39,10 @@ public class TicketCrudService {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
+            Ticket ticketFromDb = session.find(Ticket.class, ticket.getId());
+            ticketFromDb.setFromPlanet(ticket.getFromPlanet());
+            ticketFromDb.setToPlanet(ticket.getToPlanet());
+            ticketFromDb.setCreatedAt(ticket.getCreatedAt());
             session.persist(ticket);
             transaction.commit();
         } catch (Exception e) {
